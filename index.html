@@ -2,10 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>نبضة — NABDA | From Heartbeat to Forever</title>
 <meta name="description" content="NABDA — Decorative framed screens displaying your baby's ultrasound. From heartbeat to forever.">
 <meta name="theme-color" content="#FBF7F1">
+<!-- Prevent iOS Safari from auto-detecting phone numbers and emails as links -->
+<meta name="format-detection" content="telephone=no, email=no, address=no, date=no">
+<!-- iOS standalone web app appearance -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="assets/logo.png">
@@ -243,10 +248,14 @@
     padding: 0.85rem 1.1rem;
     width: 100%;
     font-family: inherit;
-    font-size: 0.95rem;
+    /* 16px base prevents iOS auto-zoom on focus; desktop downsizes via media query below */
+    font-size: 16px;
     color: var(--ink-800);
     transition: all 0.3s;
     cursor: pointer;
+  }
+  @media (min-width: 768px) {
+    .field { font-size: 0.95rem; }
   }
   textarea.field, input.field { cursor: text; }
   .field:focus {
@@ -392,6 +401,176 @@
     padding-right: 1.1rem;
     padding-left: 2.5rem;
   }
+
+  /* =====================================================================
+     ============  MOBILE-ONLY ADJUSTMENTS  (≤ 767px)  ===================
+     All rules below are scoped to phones. Desktop design untouched.
+     ===================================================================== */
+  @media (max-width: 767px) {
+
+    /* Use dynamic viewport height so hero doesn't jump when mobile URL bar hides */
+    #home {
+      min-height: 100dvh;
+      min-height: 100vh; /* fallback for older browsers */
+      padding-top: 7rem;
+      padding-bottom: 3rem;
+    }
+
+    /* Reduce blob size & blur — big blurs kill mobile performance */
+    .blob-1 { width: 260px; height: 260px; top: -80px; left: -80px; filter: blur(50px); }
+    .blob-2 { width: 220px; height: 220px; right: -100px; filter: blur(50px); }
+    .blob-3 { width: 240px; height: 240px; bottom: -120px; filter: blur(50px); }
+
+    /* Background heart pattern smaller so it reads as texture, not wallpaper */
+    .bg-canvas::before { background-size: 55px 55px; opacity: 0.5; }
+
+    /* Hero watermark: cap at viewport width and soften further */
+    #home .absolute.inset-0 img {
+      width: 80vw !important;
+      max-width: 380px !important;
+    }
+
+    /* Hero heartbeat SVG — was 120% width with negative start offset causing overflow */
+    .heartbeat-svg {
+      width: 100% !important;
+      top: -1.5rem !important;
+      left: 0 !important;
+      right: 0 !important;
+    }
+    [dir="rtl"] .heartbeat-svg { left: 0 !important; right: 0 !important; }
+
+    /* Hero headline — slightly smaller so two lines always fit */
+    #heroTitle {
+      font-size: 3rem;
+      line-height: 1.1;
+    }
+    /* English hero uses Cormorant — tighten a touch more */
+    html[dir="ltr"] #heroTitle { font-size: 2.75rem; }
+
+    /* Hero description — tighter line height for mobile reading */
+    #home p { font-size: 1rem; line-height: 1.6; }
+
+    /* Buttons — slightly less padding so they fit two-up if needed */
+    .btn-primary { padding: 0.85rem 1.75rem; font-size: 0.95rem; }
+    .btn-ghost   { padding: 0.85rem 1.5rem;  font-size: 0.95rem; }
+
+    /* Baby caption plaque: pull inward on mobile so it doesn't sit off-edge */
+    section#home .frame + .absolute,
+    section#home .frame ~ .absolute {
+      inset-inline-end: 0 !important;
+      bottom: -0.75rem !important;
+    }
+
+    /* Frame caption plaque sits inside the frame's width */
+    .frame + .absolute, .frame ~ .absolute {
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+    }
+
+    /* Ornament dashes: shorter on mobile */
+    .ornament::before, .ornament::after { width: 24px; }
+
+    /* Navbar logo slightly smaller on mobile */
+    .nav-glass .logo-img { height: 36px; }
+
+    /* Section padding — 7rem vertical is heavy on small screens */
+    section#product, section#how, section#pricing,
+    section#checkout, section#about, section#contact {
+      padding-top: 4.5rem;
+      padding-bottom: 4.5rem;
+    }
+
+    /* Section titles — slightly smaller display */
+    h2.display-en { font-size: 2.25rem; line-height: 1.1; }
+
+    /* Step numbers too large on mobile */
+    .step-num { font-size: 3.75rem; }
+
+    /* Product customizer — frame preview a touch smaller */
+    #framePreview { max-width: 16rem; }
+
+    /* Size buttons: 3 columns at ~110px each is tight.
+       Drop the dimension subtext font a touch and allow wrapping of button label. */
+    .size-btn .display-en { font-size: 1.25rem; }
+    .size-btn { padding-top: 1rem; padding-bottom: 1rem; }
+
+    /* Upload zone: less padding */
+    .upload-zone { padding: 2rem 1rem; }
+
+    /* Pricing featured card: don't scale up on mobile (it would clip the popular badge) */
+    .price-card.featured { transform: none; }
+    /* Keep popular badge from running off the card edge */
+    .price-card .absolute.-top-3 { font-size: 0.65rem; padding: 0.25rem 0.75rem; }
+
+    /* Pricing cards: reduce padding */
+    .price-card { padding: 2rem 1.25rem; }
+    .price-card .display-en { font-size: 3.5rem; }
+
+    /* Disable hover lift effect on touch devices (prevents "sticky hover") */
+    .price-card:hover, .frame:hover, .btn-primary:hover {
+      transform: none;
+    }
+
+    /* Checkout summary: not sticky on mobile (it's below the form anyway, but ensure no overflow) */
+    #checkoutForm aside { position: static !important; top: auto !important; }
+
+    /* Modal: tighter padding, allow scroll if content is tall */
+    .modal-panel { padding: 2rem 1.5rem; max-height: 90vh; overflow-y: auto; }
+    .check-circle { width: 72px; height: 72px; }
+
+    /* Mobile menu — a touch more padding at top, larger tap targets */
+    .mobile-menu { padding: 5.5rem 1.75rem 2rem; }
+    .mobile-menu a, .mobile-menu button {
+      padding: 0.5rem 0;
+      min-height: 44px; /* iOS recommended tap target */
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Touch-friendly tap targets on navbar links & buttons */
+    nav a, nav button { min-height: 40px; }
+
+    /* About section SVG a touch smaller */
+    #about svg { max-width: 320px; margin: 0 auto; display: block; }
+
+    /* Trust-row icons keep spacing sensible when items wrap */
+    #home .flex.flex-wrap.gap-x-8 { gap: 1.25rem 1.5rem; }
+
+    /* Payment options: 3 in a row at 110-120px each is usable; keep them compact */
+    .pay-option { padding: 0.85rem 0.5rem !important; }
+    .pay-option svg { width: 36px; }
+
+    /* Make sure no fixed element overflows horizontally */
+    .heartbeat-svg, .blob { max-width: 100vw; }
+
+    /* Disable blur on bg-canvas pseudo on very low-power devices — minor perf win.
+       (Using prefers-reduced-motion as a proxy for battery/accessibility.) */
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .blob { animation: none; }
+    .heart-pulse { animation: none; }
+  }
+
+  /* Very narrow screens (≤ 360px — small Androids) */
+  @media (max-width: 360px) {
+    #heroTitle { font-size: 2.5rem; }
+    html[dir="ltr"] #heroTitle { font-size: 2.25rem; }
+    h2.display-en { font-size: 2rem; }
+    .price-card .display-en { font-size: 3rem; }
+    .step-num { font-size: 3rem; }
+    /* Stack hero CTAs vertically with full width for thumb reach */
+    #home .btn-primary, #home .btn-ghost {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 </style>
 </head>
 
@@ -447,7 +626,7 @@
 
 <!-- Mobile menu -->
 <div id="mobileMenu" class="mobile-menu md:hidden">
-  <button id="mobileClose" type="button" class="absolute top-6 end-6 p-2" aria-label="Close menu">
+  <button id="mobileClose" type="button" class="absolute top-6 end-6 p-2" aria-label="Close menu" style="inset-inline-end: 1.5rem;">
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M6 6l12 12M18 6L6 18"/>
     </svg>
@@ -468,8 +647,8 @@
 <!-- ============ HERO ============ -->
 <section id="home" class="relative min-h-screen flex items-center pt-32 pb-20">
   <!-- Faint watermark logo -->
-  <div class="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
-    <img src="assets/logo.png" alt="" class="w-[500px] max-w-[80%]">
+  <div class="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none overflow-hidden">
+    <img src="assets/logo.png" alt="" class="w-[500px] max-w-[80vw]">
   </div>
 
   <div class="relative max-w-7xl mx-auto px-6 lg:px-10 w-full grid lg:grid-cols-12 gap-12 items-center">
