@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نبضة — NABDA | From Heartbeat to Forever</title>
+<meta name="description" content="NABDA — Decorative framed screens displaying your baby's ultrasound. From heartbeat to forever.">
+<meta name="theme-color" content="#FBF7F1">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: { 50:'#FBF7F1', 100:'#F6EFE4', 200:'#EFE4D1', 300:'#E3D3B6' },
+          gold:  { 300:'#D4BC8A', 400:'#C9A961', 500:'#BFA06A', 600:'#A8894F', 700:'#8B6F3E' },
+          ink:   { 700:'#5A4A37', 800:'#3E3221', 900:'#2A2116' }
+        },
+        fontFamily: {
+          display: ['Cormorant Garamond', 'serif'],
+          body:    ['Inter', 'sans-serif'],
+          arabic:  ['Tajawal', 'sans-serif'],
+          arabicDisplay: ['Amiri', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root {
+    --cream-50: #FBF7F1;
+    --cream-100: #F6EFE4;
+    --cream-200: #EFE4D1;
+    --gold-400: #C9A961;
+    --gold-500: #BFA06A;
+    --gold-600: #A8894F;
+    --ink-800: #3E3221;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream-50);
+    color: var(--ink-800);
+    font-family: 'Tajawal', 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+  html[dir="ltr"] body { font-family: 'Inter', 'Tajawal', sans-serif; }
+
+  /* ============ Display font helper classes ============ */
+  .display-ar { font-family: 'Amiri', serif; }
+  .display-en { font-family: 'Cormorant Garamond', serif; }
+
+  /* ============ Animated background ============ */
+  .bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,169,97,0.12), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 85% 40%, rgba(201,169,97,0.08), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 50% 95%, rgba(201,169,97,0.10), transparent 60%),
+      var(--cream-50);
+  }
+  .bg-canvas::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><path d='M30 42 C 20 32, 10 26, 10 18 C 10 12, 15 8, 20 8 C 25 8, 28 11, 30 14 C 32 11, 35 8, 40 8 C 45 8, 50 12, 50 18 C 50 26, 40 32, 30 42 Z' fill='%23C9A961' fill-opacity='0.05'/></svg>");
+    background-size: 80px 80px;
+    opacity: 0.6;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: float 20s ease-in-out infinite;
+  }
+  .blob-1 { width: 500px; height: 500px; background: #D4BC8A; top: -150px; left: -100px; }
+  .blob-2 { width: 400px; height: 400px; background: #EFE4D1; top: 40%; right: -150px; animation-delay: -7s; }
+  .blob-3 { width: 450px; height: 450px; background: #D4BC8A; bottom: -200px; left: 30%; animation-delay: -14s; opacity: 0.25; }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%      { transform: translate(40px, -30px) scale(1.05); }
+    66%      { transform: translate(-30px, 40px) scale(0.95); }
+  }
+
+  /* ============ Heartbeat animations ============ */
+  .heartbeat-svg path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 4s ease-out forwards, pulse-glow 3s ease-in-out infinite 4s;
+  }
+  @keyframes draw       { to { stroke-dashoffset: 0; } }
+  @keyframes pulse-glow {
+    0%,100% { filter: drop-shadow(0 0 0 rgba(201,169,97,0)); }
+    50%     { filter: drop-shadow(0 0 8px rgba(201,169,97,0.6)); }
+  }
+
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    15%     { transform: scale(1.15); }
+    30%     { transform: scale(1); }
+    45%     { transform: scale(1.15); }
+    60%     { transform: scale(1); }
+  }
+  .heart-pulse { animation: heartbeat 1.8s ease-in-out infinite; transform-origin: center; }
+
+  /* ============ Scroll reveal ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.25s; }
+  .delay-3 { transition-delay: 0.4s; }
+
+  /* ============ Buttons ============ */
+  .btn-primary {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
+    color: var(--cream-50);
+    padding: 1rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow 0.4s;
+    box-shadow: 0 8px 30px rgba(168,137,79,0.25);
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(168,137,79,0.35);
+  }
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+  .btn-primary:hover::after { transform: translateX(100%); }
+
+  .btn-ghost {
+    border: 1px solid var(--gold-500);
+    color: var(--gold-600);
+    padding: 1rem 2rem;
+    border-radius: 9999px;
+    transition: all 0.3s;
+    background: transparent;
+    cursor: pointer;
+    display: inline-block;
+  }
+  .btn-ghost:hover { background: var(--gold-500); color: var(--cream-50); }
+
+  /* ============ Logo ============ */
+  .logo-mark svg { display: block; }
+  .logo-img { height: 44px; width: auto; object-fit: contain; }
+
+  /* ============ Frame preview ============ */
+  .frame {
+    border: 12px solid #8B6F3E;
+    border-radius: 6px;
+    padding: 8px;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.05) inset,
+      0 20px 60px rgba(62,50,33,0.2),
+      0 8px 20px rgba(62,50,33,0.1);
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1), border-color 0.5s, border-width 0.5s;
+  }
+  .frame:hover { transform: translateY(-4px) rotate(-0.5deg); }
+  .frame.minimal  { border-color: #E3D3B6; border-width: 8px; }
+  .frame.classic  { border-color: #8B6F3E; border-width: 14px; }
+  .frame.modern   { border-color: #2A2116; border-width: 6px; }
+
+  .ornament {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--gold-500);
+  }
+  .ornament::before, .ornament::after {
+    content: "";
+    width: 40px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.5;
+  }
+
+  /* ============ Pricing ============ */
+  .price-card {
+    transition: all 0.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .price-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(62,50,33,0.12);
+  }
+  .price-card.featured {
+    background: linear-gradient(180deg, #FBF7F1 0%, #F6EFE4 100%);
+    box-shadow: 0 20px 50px rgba(168,137,79,0.15);
+    transform: scale(1.03);
+  }
+
+  /* Steps */
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 5rem;
+    line-height: 1;
+    color: var(--gold-400);
+    opacity: 0.5;
+  }
+
+  /* ============ Form fields ============ */
+  .field {
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(168,137,79,0.2);
+    border-radius: 12px;
+    padding: 0.85rem 1.1rem;
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--ink-800);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  textarea.field, input.field { cursor: text; }
+  .field:focus {
+    outline: none;
+    border-color: var(--gold-500);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(201,169,97,0.15);
+  }
+  /* Selected state applied via JS */
+  .field.is-selected {
+    background: var(--gold-500);
+    color: var(--cream-50);
+    border-color: var(--gold-500);
+  }
+  .field.is-selected .text-ink-700\/60,
+  .field.is-selected .text-gold-600 { color: var(--cream-50); opacity: 0.9; }
+
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed rgba(168,137,79,0.4);
+    border-radius: 16px;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(255,255,255,0.4);
+  }
+  .upload-zone:hover, .upload-zone.drag {
+    border-color: var(--gold-500);
+    background: rgba(255,255,255,0.7);
+    transform: scale(1.01);
+  }
+
+  /* Spinner */
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(201,169,97,0.2);
+    border-top-color: var(--gold-500);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Success check */
+  .check-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--gold-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    animation: pop 0.5s cubic-bezier(.2,1.4,.4,1);
+  }
+  @keyframes pop {
+    0%   { transform: scale(0); }
+    100% { transform: scale(1); }
+  }
+  .check-mark {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: draw-check 0.5s 0.3s ease forwards;
+  }
+  @keyframes draw-check { to { stroke-dashoffset: 0; } }
+
+  /* Navbar */
+  .nav-glass {
+    background: rgba(251,247,241,0.75);
+    backdrop-filter: blur(16px) saturate(1.5);
+    border-bottom: 1px solid rgba(168,137,79,0.1);
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(42,33,22,0.5);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+  .modal-panel {
+    background: var(--cream-50);
+    border-radius: 20px;
+    max-width: 480px;
+    width: 100%;
+    padding: 2.5rem;
+    transform: scale(0.95);
+    transition: transform 0.3s;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+  }
+  .modal-backdrop.open .modal-panel { transform: scale(1); }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: var(--cream-50);
+    padding: 6rem 2rem 2rem;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+  }
+  [dir="rtl"] .mobile-menu { transform: translateX(-100%); }
+  .mobile-menu.open { transform: translateX(0) !important; }
+
+  /* Accessibility */
+  a:focus-visible, button:focus-visible,
+  input:focus-visible, textarea:focus-visible,
+  select:focus-visible, label:focus-visible {
+    outline: 2px solid var(--gold-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Payment option selected */
+  .pay-option.is-selected {
+    border-color: var(--gold-500);
+    background: var(--cream-100);
+    box-shadow: 0 0 0 2px rgba(201,169,97,0.2);
+  }
+
+  /* Hide default select arrow on RTL properly */
+  select.field {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A8894F' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  [dir="rtl"] select.field {
+    background-position: left 1rem center;
+    padding-right: 1.1rem;
+    padding-left: 2.5rem;
+  }
+</style>
+</head>
+
+<body>
+
+<!--
+  Safelist: Tailwind CDN only generates utilities it sees in markup.
+  Some classes are only ever added via JS, so we render them hidden
+  here to ensure Tailwind generates their CSS.
+-->
+<div class="hidden
+  bg-gold-500 text-cream-50 border-gold-500
+  bg-cream-100 bg-cream-50 border-gold-500
+  text-gold-600 border-gold-500
+  display-ar display-en" aria-hidden="true"></div>
+
+<!-- ============ ANIMATED BACKGROUND ============ -->
+<div class="bg-canvas">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="nav-glass fixed top-0 inset-x-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-3 logo-mark">
+      <img src="assets/logo.png" alt="NABDA logo" class="logo-img">
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8 text-sm">
+      <a href="#home"    class="hover:text-gold-600 transition" data-i18n="nav-home">الرئيسية</a>
+      <a href="#product" class="hover:text-gold-600 transition" data-i18n="nav-product">المنتج</a>
+      <a href="#how"     class="hover:text-gold-600 transition" data-i18n="nav-how">كيف يعمل</a>
+      <a href="#pricing" class="hover:text-gold-600 transition" data-i18n="nav-pricing">الأسعار</a>
+      <a href="#about"   class="hover:text-gold-600 transition" data-i18n="nav-about">من نحن</a>
+      <a href="#contact" class="hover:text-gold-600 transition" data-i18n="nav-contact">تواصل</a>
+
+      <button id="langToggle" type="button"
+              class="border border-gold-500/40 text-gold-600 px-4 py-1.5 rounded-full hover:bg-gold-500 hover:text-cream-50 transition text-xs tracking-widest uppercase">
+        <span id="langLabel">EN</span>
+      </button>
+    </div>
+
+    <button id="mobileOpen" type="button" class="md:hidden p-2" aria-label="Open menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div id="mobileMenu" class="mobile-menu md:hidden">
+  <button id="mobileClose" type="button" class="absolute top-6 end-6 p-2" aria-label="Close menu">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </svg>
+  </button>
+  <nav class="flex flex-col gap-6 text-2xl">
+    <a href="#home"    class="mobile-link" data-i18n="nav-home">الرئيسية</a>
+    <a href="#product" class="mobile-link" data-i18n="nav-product">المنتج</a>
+    <a href="#how"     class="mobile-link" data-i18n="nav-how">كيف يعمل</a>
+    <a href="#pricing" class="mobile-link" data-i18n="nav-pricing">الأسعار</a>
+    <a href="#about"   class="mobile-link" data-i18n="nav-about">من نحن</a>
+    <a href="#contact" class="mobile-link" data-i18n="nav-contact">تواصل</a>
+    <button id="langToggleMobile" type="button" class="mt-6 self-start border border-gold-500 text-gold-600 px-5 py-2 rounded-full text-sm tracking-widest uppercase">
+      <span id="langLabelMobile">EN</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ============ HERO ============ -->
+<section id="home" class="relative min-h-screen flex items-center pt-32 pb-20">
+  <!-- Faint watermark logo -->
+  <div class="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
+    <img src="assets/logo.png" alt="" class="w-[500px] max-w-[80%]">
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-10 w-full grid lg:grid-cols-12 gap-12 items-center">
+    <!-- Left / text -->
+    <div class="lg:col-span-7 space-y-8">
+      <div class="ornament text-xs tracking-[0.3em] uppercase">
+        <span data-i18n="hero-eyebrow">صُنع في المملكة العربية السعودية</span>
+      </div>
+
+      <h1 id="heroTitle" class="display-ar text-5xl md:text-7xl lg:text-8xl leading-[1.05] text-ink-900 font-bold"
+          data-i18n-html="hero-title">
+        من نبضة<br>
+        <em class="text-gold-600 font-normal italic">إلى الأبد</em>
+      </h1>
+
+      <p class="max-w-xl text-lg md:text-xl text-ink-700/80 leading-relaxed" data-i18n="hero-sub">
+        نحوّل أول نبضة قلب لطفلك إلى قطعة ديكور تُخلّد اللحظة للأبد. إطار أنيق بشاشة صغيرة تعرض صورة أو مقطع السونار — ذكرى تبقى معلّقة على جدار بيتك.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 pt-2">
+        <a href="#product" class="btn-primary">
+          <span data-i18n="hero-cta">ابدأ تصميمك</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dir-arrow">
+            <path d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </a>
+        <a href="#how" class="btn-ghost" data-i18n="hero-cta2">كيف يعمل؟</a>
+      </div>
+
+      <!-- Trust row -->
+      <div class="flex flex-wrap gap-x-8 gap-y-3 pt-6 text-sm text-ink-700/70">
+        <div class="flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-gold-500 heart-pulse"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
+          <span data-i18n="trust-1">صُنع بحب في السعودية</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gold-500"><path d="M20 6L9 17l-5-5"/></svg>
+          <span data-i18n="trust-2">خامات فاخرة</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gold-500"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2h-4a2 2 0 01-2-2v-5H9v5a2 2 0 01-2 2H3a2 2 0 01-2-2V9z"/></svg>
+          <span data-i18n="trust-3">توصيل داخل المملكة</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right / visual -->
+    <div class="lg:col-span-5 relative">
+      <svg class="heartbeat-svg absolute -top-10 start-[-2.5rem] w-[120%] h-auto opacity-40" viewBox="0 0 400 120" fill="none" style="pointer-events:none">
+        <path d="M0 60 L80 60 L100 30 L120 90 L140 20 L160 100 L180 60 L400 60"
+              stroke="#C9A961" stroke-width="1.5" fill="none"/>
+      </svg>
+
+      <div class="relative mx-auto max-w-sm">
+        <div class="frame classic aspect-[3/4] relative">
+          <div class="w-full h-full bg-gradient-to-br from-cream-100 via-cream-200 to-cream-300 rounded-sm overflow-hidden relative">
+            <svg viewBox="0 0 300 400" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="uFade" cx="50%" cy="50%" r="60%">
+                  <stop offset="0%"  stop-color="#3E3221" stop-opacity="0.9"/>
+                  <stop offset="70%" stop-color="#3E3221" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#3E3221" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <rect width="300" height="400" fill="#2A2116"/>
+              <ellipse cx="150" cy="200" rx="140" ry="180" fill="url(#uFade)"/>
+              <path d="M130 150 C 100 150, 85 180, 95 210 C 100 230, 115 240, 130 240 C 115 250, 110 275, 125 290 C 140 305, 170 300, 180 280 C 200 285, 220 270, 220 245 C 220 225, 205 215, 190 215 C 200 200, 200 180, 190 165 C 175 145, 150 142, 130 150 Z" fill="#D4BC8A" opacity="0.75"/>
+              <text x="20" y="30" font-family="monospace" font-size="10" fill="#C9A961" opacity="0.7">WK 20 · 2026</text>
+              <text x="230" y="380" font-family="monospace" font-size="10" fill="#C9A961" opacity="0.7">NABDA</text>
+            </svg>
+            <div class="absolute inset-0 pointer-events-none" style="background: repeating-linear-gradient(to bottom, transparent 0, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px);"></div>
+          </div>
+        </div>
+        <div class="absolute -bottom-6 end-[-1.5rem] bg-cream-50 px-5 py-3 rounded-full shadow-xl border border-gold-300/30">
+          <div class="display-en italic text-gold-600 text-sm">Baby Sarah · 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-xs text-gold-600/60 tracking-[0.3em] uppercase">
+    <span data-i18n="scroll">اسحب للأسفل</span>
+    <div class="w-px h-10 bg-gold-500/40 animate-pulse"></div>
+  </div>
+</section>
+
+<!-- ============ PRODUCT CUSTOMIZATION ============ -->
+<section id="product" class="relative py-28">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <div class="ornament text-xs tracking-[0.3em] uppercase mb-6">
+        <span data-i18n="product-eyebrow">صمّمي قطعتك</span>
+      </div>
+      <h2 class="display-en text-4xl md:text-6xl text-ink-900 mb-5" data-i18n="product-title">اصنعي ذكراكِ</h2>
+      <p class="text-ink-700/75 text-lg" data-i18n="product-sub">كل تفصيلة تختارينها تروي قصة — من حجم الإطار إلى اسم صغير محفور بأناقة.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-5 gap-10 items-start">
+      <!-- Preview -->
+      <div class="lg:col-span-2 lg:sticky lg:top-28">
+        <div id="framePreview" class="frame classic mx-auto max-w-xs aspect-[3/4]">
+          <div id="mediaContainer" class="w-full h-full bg-gradient-to-br from-ink-900 to-ink-800 rounded-sm overflow-hidden relative flex items-center justify-center">
+            <svg viewBox="0 0 300 400" class="w-full h-full" id="defaultPreview">
+              <defs>
+                <radialGradient id="p2" cx="50%" cy="50%" r="60%">
+                  <stop offset="0%" stop-color="#3E3221" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="#3E3221" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <rect width="300" height="400" fill="#2A2116"/>
+              <ellipse cx="150" cy="200" rx="140" ry="180" fill="url(#p2)"/>
+              <path d="M130 150 C 100 150, 85 180, 95 210 C 100 230, 115 240, 130 240 C 115 250, 110 275, 125 290 C 140 305, 170 300, 180 280 C 200 285, 220 270, 220 245 C 220 225, 205 215, 190 215 C 200 200, 200 180, 190 165 C 175 145, 150 142, 130 150 Z" fill="#D4BC8A" opacity="0.7"/>
+            </svg>
+          </div>
+          <div id="engraving" class="display-en italic text-center text-gold-600 mt-3 min-h-[1.5rem]"></div>
+        </div>
+        <p class="text-center text-xs text-ink-700/50 mt-4 tracking-widest uppercase" data-i18n="preview-label">معاينة حيّة</p>
+      </div>
+
+      <!-- Controls -->
+      <div class="lg:col-span-3 space-y-10">
+        <!-- Size -->
+        <div class="reveal">
+          <label class="block text-xs tracking-[0.3em] uppercase text-gold-600 mb-4" data-i18n="size-label">حجم الإطار</label>
+          <div class="grid grid-cols-3 gap-3">
+            <button type="button" class="size-btn field py-5 text-center" data-size="small">
+              <div class="display-en text-2xl" data-i18n="size-s">Small</div>
+              <div class="text-xs opacity-60 mt-1">15×20 cm</div>
+              <div class="text-sm text-gold-600 mt-2 price-label">350 SAR</div>
+            </button>
+            <button type="button" class="size-btn field py-5 text-center" data-size="medium">
+              <div class="display-en text-2xl" data-i18n="size-m">Medium</div>
+              <div class="text-xs opacity-60 mt-1">20×25 cm</div>
+              <div class="text-sm text-gold-600 mt-2 price-label">380 SAR</div>
+            </button>
+            <button type="button" class="size-btn field py-5 text-center" data-size="large">
+              <div class="display-en text-2xl" data-i18n="size-l">Large</div>
+              <div class="text-xs opacity-60 mt-1">25×35 cm</div>
+              <div class="text-sm text-gold-600 mt-2 price-label">400 SAR</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Display type -->
+        <div class="reveal">
+          <label class="block text-xs tracking-[0.3em] uppercase text-gold-600 mb-4" data-i18n="display-label">نوع العرض</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" class="type-btn field py-4" data-type="image">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="inline-block align-middle">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>
+              </svg>
+              <span class="ms-2" data-i18n="type-image">صورة</span>
+            </button>
+            <button type="button" class="type-btn field py-4" data-type="video">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="inline-block align-middle">
+                <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+              </svg>
+              <span class="ms-2" data-i18n="type-video">فيديو</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Upload -->
+        <div class="reveal">
+          <label class="block text-xs tracking-[0.3em] uppercase text-gold-600 mb-4" data-i18n="upload-label">ارفعي السونار</label>
+          <div id="uploadZone" class="upload-zone">
+            <input type="file" id="fileInput" class="hidden" accept="image/*,video/*">
+            <div id="uploadIdle">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" class="mx-auto text-gold-500 mb-3">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              </svg>
+              <p class="text-ink-800" data-i18n="upload-text">اضغطي لرفع صورة أو مقطع السونار</p>
+              <p class="text-xs text-ink-700/50 mt-2" data-i18n="upload-hint">JPG · PNG · MP4 · حتى 50MB</p>
+            </div>
+            <div id="uploadLoading" class="hidden">
+              <div class="spinner mx-auto mb-3"></div>
+              <p class="text-sm text-ink-700/70" data-i18n="uploading">جارٍ الرفع...</p>
+            </div>
+            <div id="uploadDone" class="hidden">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#BFA06A" stroke-width="2" class="mx-auto mb-2"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm text-gold-600" data-i18n="upload-done">تم الرفع بنجاح</p>
+              <button id="uploadReset" type="button" class="text-xs underline text-ink-700/60 mt-2" data-i18n="upload-change">تغيير الملف</button>
+            </div>
+          </div>
+          <p id="uploadError" class="hidden text-sm text-red-700/80 mt-2"></p>
+        </div>
+
+        <!-- Style -->
+        <div class="reveal">
+          <label class="block text-xs tracking-[0.3em] uppercase text-gold-600 mb-4" data-i18n="style-label">نمط الإطار</label>
+          <div class="grid grid-cols-3 gap-3">
+            <button type="button" class="style-btn field py-3" data-style="minimal"><span data-i18n="style-minimal">بسيط</span></button>
+            <button type="button" class="style-btn field py-3" data-style="classic"><span data-i18n="style-classic">كلاسيكي</span></button>
+            <button type="button" class="style-btn field py-3" data-style="modern"><span data-i18n="style-modern">عصري</span></button>
+          </div>
+        </div>
+
+        <!-- Engraving -->
+        <div class="reveal">
+          <label class="block text-xs tracking-[0.3em] uppercase text-gold-600 mb-4" data-i18n="engrave-label">نقش اختياري</label>
+          <div class="grid md:grid-cols-2 gap-3">
+            <input id="engraveName" type="text" maxlength="24" class="field">
+            <input id="engraveDate" type="text" maxlength="20" class="field">
+          </div>
+        </div>
+
+        <!-- Proceed -->
+        <div class="reveal flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-gold-500/20">
+          <div>
+            <div class="text-xs tracking-widest uppercase text-ink-700/60" data-i18n="total">الإجمالي</div>
+            <div class="display-en text-4xl text-ink-900"><span id="totalPrice">380</span> <span class="text-gold-600 text-2xl">SAR</span></div>
+          </div>
+          <a href="#checkout" id="goCheckout" class="btn-primary" data-i18n="proceed">المتابعة للدفع</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how" class="relative py-28">
+  <div class="max-w-6xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-20 reveal">
+      <div class="ornament text-xs tracking-[0.3em] uppercase mb-6"><span data-i18n="how-eyebrow">الرحلة</span></div>
+      <h2 class="display-en text-4xl md:text-6xl text-ink-900" data-i18n="how-title">ثلاث خطوات للأبد</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-10">
+      <div class="reveal delay-1 text-center">
+        <div class="step-num">01</div>
+        <h3 class="display-en text-2xl text-ink-900 mt-4 mb-3" data-i18n="step1-title">ارفعي</h3>
+        <p class="text-ink-700/70" data-i18n="step1-desc">أرسلي لنا صورة أو مقطع السونار الذي تحبينه.</p>
+      </div>
+      <div class="reveal delay-2 text-center">
+        <div class="step-num">02</div>
+        <h3 class="display-en text-2xl text-ink-900 mt-4 mb-3" data-i18n="step2-title">خصّصي</h3>
+        <p class="text-ink-700/70" data-i18n="step2-desc">اختاري الحجم والإطار والنقش المناسب لذوقك.</p>
+      </div>
+      <div class="reveal delay-3 text-center">
+        <div class="step-num">03</div>
+        <h3 class="display-en text-2xl text-ink-900 mt-4 mb-3" data-i18n="step3-title">استلمي</h3>
+        <p class="text-ink-700/70" data-i18n="step3-desc">يصلكِ الإطار الجاهز أمام باب منزلكِ.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing" class="relative py-28">
+  <div class="max-w-6xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <div class="ornament text-xs tracking-[0.3em] uppercase mb-6"><span data-i18n="price-eyebrow">أسعار واضحة</span></div>
+      <h2 class="display-en text-4xl md:text-6xl text-ink-900 mb-4" data-i18n="price-title">الأسعار</h2>
+      <p class="text-ink-700/70" data-i18n="price-sub">جميع الأسعار شاملة التغليف الفاخر والشحن داخل المملكة.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="price-card bg-cream-50/60 backdrop-blur border border-gold-500/15 rounded-2xl p-10 text-center">
+        <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-3" data-i18n="size-s">صغير</div>
+        <div class="text-sm text-ink-700/60 mb-6">15 × 20 cm</div>
+        <div class="display-en text-6xl text-ink-900">350</div>
+        <div class="text-gold-600 tracking-widest text-sm mt-1">SAR</div>
+        <ul class="text-sm text-ink-700/70 space-y-2 mt-8 text-start list-none">
+          <li data-i18n="feat-1">شاشة HD صغيرة</li>
+          <li data-i18n="feat-2">بطارية تدوم طويلاً</li>
+          <li data-i18n="feat-3">علبة هدايا فاخرة</li>
+        </ul>
+        <a href="#product" class="btn-ghost mt-8 inline-block" data-i18n="choose">اختاري هذا</a>
+      </div>
+
+      <div class="price-card featured border-2 border-gold-500 rounded-2xl p-10 text-center relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold-500 text-cream-50 text-xs tracking-[0.3em] uppercase px-4 py-1 rounded-full whitespace-nowrap" data-i18n="popular">الأكثر طلباً</div>
+        <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-3" data-i18n="size-m">متوسط</div>
+        <div class="text-sm text-ink-700/60 mb-6">20 × 25 cm</div>
+        <div class="display-en text-6xl text-ink-900">380</div>
+        <div class="text-gold-600 tracking-widest text-sm mt-1">SAR</div>
+        <ul class="text-sm text-ink-700/70 space-y-2 mt-8 text-start list-none">
+          <li data-i18n="feat-4">شاشة HD متوسطة</li>
+          <li data-i18n="feat-5">نقش مجاني</li>
+          <li data-i18n="feat-6">تغليف فاخر مع بطاقة مخصصة</li>
+        </ul>
+        <a href="#product" class="btn-primary mt-8" data-i18n="choose-pop">الأكثر طلباً</a>
+      </div>
+
+      <div class="price-card bg-cream-50/60 backdrop-blur border border-gold-500/15 rounded-2xl p-10 text-center">
+        <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-3" data-i18n="size-l">كبير</div>
+        <div class="text-sm text-ink-700/60 mb-6">25 × 35 cm</div>
+        <div class="display-en text-6xl text-ink-900">400</div>
+        <div class="text-gold-600 tracking-widest text-sm mt-1">SAR</div>
+        <ul class="text-sm text-ink-700/70 space-y-2 mt-8 text-start list-none">
+          <li data-i18n="feat-7">شاشة HD كبيرة</li>
+          <li data-i18n="feat-8">نقش مزدوج</li>
+          <li data-i18n="feat-9">تعليق جداري متضمن</li>
+        </ul>
+        <a href="#product" class="btn-ghost mt-8 inline-block" data-i18n="choose">اختاري هذا</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHECKOUT ============ -->
+<section id="checkout" class="relative py-28">
+  <div class="max-w-5xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-14 reveal">
+      <div class="ornament text-xs tracking-[0.3em] uppercase mb-6"><span data-i18n="check-eyebrow">أكملي طلبك</span></div>
+      <h2 class="display-en text-4xl md:text-6xl text-ink-900" data-i18n="check-title">الدفع</h2>
+    </div>
+
+    <form id="checkoutForm" class="grid lg:grid-cols-5 gap-10 reveal">
+      <div class="lg:col-span-3 space-y-6">
+        <div>
+          <label class="text-xs tracking-widest uppercase text-gold-600 block mb-2" for="fName" data-i18n="field-name">الاسم الكامل</label>
+          <input type="text" class="field" id="fName" required>
+        </div>
+        <div>
+          <label class="text-xs tracking-widest uppercase text-gold-600 block mb-2" for="fPhone" data-i18n="field-phone">رقم الجوال</label>
+          <input type="tel" class="field" id="fPhone" placeholder="+966 5X XXX XXXX" pattern="^(\+?966|0)?5[0-9]{8}$" required>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs tracking-widest uppercase text-gold-600 block mb-2" for="fCity" data-i18n="field-city">المدينة</label>
+            <select class="field" id="fCity" required>
+              <option value="" data-i18n="city-sel">-- اختاري --</option>
+              <option value="Riyadh" data-i18n="city-rd">الرياض</option>
+              <option value="Jeddah" data-i18n="city-jd">جدة</option>
+              <option value="Mecca" data-i18n="city-mk">مكة المكرمة</option>
+              <option value="Medina" data-i18n="city-md">المدينة المنورة</option>
+              <option value="Dammam" data-i18n="city-dm">الدمام</option>
+              <option value="Khobar" data-i18n="city-kb">الخبر</option>
+              <option value="Other" data-i18n="city-ot">أخرى</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs tracking-widest uppercase text-gold-600 block mb-2" for="fDistrict" data-i18n="field-district">الحي</label>
+            <input type="text" class="field" id="fDistrict" required>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs tracking-widest uppercase text-gold-600 block mb-2" for="fAddress" data-i18n="field-address">العنوان</label>
+          <input type="text" class="field" id="fAddress" required>
+        </div>
+
+        <!-- Payment -->
+        <div class="pt-4">
+          <label class="text-xs tracking-widest uppercase text-gold-600 block mb-3" data-i18n="field-pay">طريقة الدفع</label>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="pay-option field py-5 text-center cursor-pointer flex flex-col items-center gap-2">
+              <input type="radio" name="pay" value="mada" class="hidden" checked>
+              <svg width="42" height="18" viewBox="0 0 80 24" fill="none">
+                <rect width="80" height="24" rx="4" fill="#BFA06A" opacity="0.15"/>
+                <text x="10" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#8B6F3E">mada</text>
+              </svg>
+              <span class="text-xs">Mada</span>
+            </label>
+            <label class="pay-option field py-5 text-center cursor-pointer flex flex-col items-center gap-2">
+              <input type="radio" name="pay" value="stcpay" class="hidden">
+              <svg width="48" height="18" viewBox="0 0 80 24" fill="none">
+                <rect width="80" height="24" rx="4" fill="#BFA06A" opacity="0.15"/>
+                <text x="6" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#8B6F3E">stc pay</text>
+              </svg>
+              <span class="text-xs">STC Pay</span>
+            </label>
+            <label class="pay-option field py-5 text-center cursor-pointer flex flex-col items-center gap-2">
+              <input type="radio" name="pay" value="apple" class="hidden">
+              <svg width="30" height="18" viewBox="0 0 24 24" fill="#8B6F3E">
+                <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+              </svg>
+              <span class="text-xs">Apple Pay</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <aside class="lg:col-span-2 bg-cream-100/60 backdrop-blur border border-gold-500/15 rounded-2xl p-8 h-fit lg:sticky lg:top-28">
+        <h3 class="display-en text-2xl mb-5 text-ink-900" data-i18n="summary-title">ملخص الطلب</h3>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between">
+            <span class="text-ink-700/70" data-i18n="sum-size">الحجم</span>
+            <span id="sumSize" class="text-ink-900">متوسط</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-ink-700/70" data-i18n="sum-type">العرض</span>
+            <span id="sumType" class="text-ink-900">صورة</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-ink-700/70" data-i18n="sum-style">الإطار</span>
+            <span id="sumStyle" class="text-ink-900">كلاسيكي</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-ink-700/70" data-i18n="sum-eng">النقش</span>
+            <span id="sumEng" class="text-ink-900">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-ink-700/70" data-i18n="sum-ship">الشحن</span>
+            <span class="text-gold-600" data-i18n="sum-ship-free">مجاني</span>
+          </div>
+          <div class="h-px bg-gold-500/20 my-4"></div>
+          <div class="flex justify-between items-end">
+            <span class="text-ink-700 text-base" data-i18n="total">الإجمالي</span>
+            <span class="display-en text-3xl text-ink-900"><span id="sumTotal">380</span> <span class="text-sm text-gold-600">SAR</span></span>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary w-full mt-6 justify-center" data-i18n="pay-now">تأكيد الطلب</button>
+        <p class="text-xs text-ink-700/50 text-center mt-3" data-i18n="secure">دفع آمن ومشفّر</p>
+      </aside>
+    </form>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" class="relative py-28">
+  <div class="max-w-6xl mx-auto px-6 lg:px-10 grid md:grid-cols-2 gap-16 items-center">
+    <div class="reveal">
+      <div class="ornament text-xs tracking-[0.3em] uppercase mb-6"><span data-i18n="about-eyebrow">قصتنا</span></div>
+      <h2 class="display-en text-4xl md:text-6xl text-ink-900 mb-6" data-i18n="about-title">من نحن</h2>
+      <p class="text-ink-700/80 leading-relaxed mb-6 text-lg" data-i18n="about-p1">نبضة علامة سعودية وُلدت من لحظة حقيقية — لحظة سمع فيها أبٌ نبض قلب طفله لأول مرة، وأدرك أن هذه اللحظة تستحق أن تُخلَّد.</p>
+      <p class="text-ink-700/70 leading-relaxed mb-10" data-i18n="about-p2">نحوّل أولى نبضات حياة أطفالكم إلى قطع فنية دائمة تزيّن جدران منازلكم وذاكرتكم.</p>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="border-s-2 border-gold-500 ps-5">
+          <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-2" data-i18n="vision">رؤيتنا</div>
+          <p class="text-ink-900" data-i18n="vision-text">تحويل اللحظات إلى ذكريات خالدة.</p>
+        </div>
+        <div class="border-s-2 border-gold-500 ps-5">
+          <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-2" data-i18n="mission">مهمتنا</div>
+          <p class="text-ink-900" data-i18n="mission-text">صناعة ديكور شخصي ذا معنى.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal delay-2 relative">
+      <svg viewBox="0 0 400 400" class="w-full h-auto">
+        <defs>
+          <linearGradient id="heartG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#D4BC8A"/>
+            <stop offset="100%" stop-color="#8B6F3E"/>
+          </linearGradient>
+        </defs>
+        <circle cx="200" cy="200" r="160" fill="#F6EFE4" opacity="0.5"/>
+        <circle cx="200" cy="200" r="160" fill="none" stroke="#C9A961" stroke-width="0.5" opacity="0.4"/>
+        <path d="M200 320 C 120 260, 70 210, 70 160 C 70 120, 100 90, 140 90 C 170 90, 190 110, 200 130 C 210 110, 230 90, 260 90 C 300 90, 330 120, 330 160 C 330 210, 280 260, 200 320 Z"
+              fill="none" stroke="url(#heartG)" stroke-width="2"/>
+        <path d="M80 200 L140 200 L150 175 L160 225 L170 160 L180 235 L190 200 L320 200"
+              stroke="#BFA06A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="relative py-28">
+  <div class="max-w-4xl mx-auto px-6 lg:px-10">
+    <div class="text-center mb-14 reveal">
+      <div class="ornament text-xs tracking-[0.3em] uppercase mb-6"><span data-i18n="contact-eyebrow">تواصلوا معنا</span></div>
+      <h2 class="display-en text-4xl md:text-6xl text-ink-900 mb-4" data-i18n="contact-title">نحن هنا</h2>
+      <p class="text-ink-700/70" data-i18n="contact-sub">نحب أن نسمع منكم. راسلونا وسنرد خلال ٢٤ ساعة.</p>
+    </div>
+
+    <div class="grid md:grid-cols-5 gap-10">
+      <div class="md:col-span-2 space-y-6 reveal">
+        <div>
+          <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-2" data-i18n="contact-email">البريد الإلكتروني</div>
+          <a href="mailto:lhalattas1@gmail.com" class="text-ink-900 hover:text-gold-600 transition">lhalattas1@gmail.com</a>
+        </div>
+        <div>
+          <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-2" data-i18n="contact-loc">الموقع</div>
+          <div class="text-ink-900" data-i18n="contact-loc-v">المملكة العربية السعودية</div>
+        </div>
+        <div>
+          <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-2" data-i18n="contact-hours">ساعات العمل</div>
+          <div class="text-ink-900" data-i18n="contact-hours-v">الأحد – الخميس · ٩ص – ٦م</div>
+        </div>
+      </div>
+
+      <form id="contactForm" class="md:col-span-3 space-y-4 reveal delay-2">
+        <input type="text" class="field" id="cName" required data-i18n-ph="field-name-ph" placeholder="اسمكِ">
+        <input type="email" class="field" id="cEmail" required data-i18n-ph="field-email-ph" placeholder="بريدكِ الإلكتروني">
+        <textarea class="field" id="cMsg" rows="5" required data-i18n-ph="field-msg-ph" placeholder="رسالتكِ"></textarea>
+        <button type="submit" class="btn-primary" data-i18n="send-msg">أرسلي الرسالة</button>
+        <p id="contactOk" class="hidden text-sm text-gold-600 pt-2" data-i18n="sent">شكراً — تم استلام رسالتك بنجاح.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="relative pt-20 pb-10 border-t border-gold-500/15">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 grid md:grid-cols-4 gap-10">
+    <div class="md:col-span-2">
+      <img src="assets/logo.png" alt="NABDA" class="logo-img" style="height: 52px;">
+      <p class="text-sm text-ink-700/60 mt-4 max-w-xs leading-relaxed" data-i18n="foot-tag">من أول نبضة إلى ذكرى تبقى للأبد — صُنع في المملكة العربية السعودية.</p>
+    </div>
+
+    <div>
+      <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-4" data-i18n="foot-nav">روابط</div>
+      <ul class="space-y-2 text-sm list-none">
+        <li><a href="#home" class="hover:text-gold-600" data-i18n="nav-home">الرئيسية</a></li>
+        <li><a href="#about" class="hover:text-gold-600" data-i18n="nav-about">من نحن</a></li>
+        <li><a href="#contact" class="hover:text-gold-600" data-i18n="nav-contact">تواصل</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="text-xs tracking-[0.3em] uppercase text-gold-600 mb-4" data-i18n="foot-contact">اتصل</div>
+      <ul class="space-y-2 text-sm text-ink-700/70 list-none">
+        <li><a href="mailto:lhalattas1@gmail.com" class="hover:text-gold-600">lhalattas1@gmail.com</a></li>
+        <li><button id="langFoot" type="button" class="underline hover:text-gold-600"><span id="langFootLabel">English</span></button></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 mt-14 pt-6 border-t border-gold-500/15 flex flex-wrap justify-between items-center gap-3 text-xs text-ink-700/50">
+    <div>© 2026 NABDA · <span data-i18n="rights">جميع الحقوق محفوظة</span></div>
+    <div class="flex items-center gap-2">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-gold-500 heart-pulse"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
+      <span data-i18n="made-with">صُنع بحب</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ SUCCESS MODAL ============ -->
+<div id="successModal" class="modal-backdrop">
+  <div class="modal-panel text-center">
+    <div class="check-circle">
+      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path class="check-mark" d="M5 12l5 5L20 7"/>
+      </svg>
+    </div>
+    <h3 class="display-en text-3xl text-ink-900 mt-6 mb-2" data-i18n="success-title">شكراً لكِ</h3>
+    <p class="text-ink-700/70 mb-2" data-i18n="success-sub">تم استلام طلبك بنجاح.</p>
+    <p class="text-sm text-gold-600 display-en italic mb-6" data-i18n="success-line">رحلة ذكراكِ بدأت الآن.</p>
+    <div class="bg-cream-100/80 rounded-xl p-4 text-sm mb-6">
+      <div class="text-ink-700/60 text-xs uppercase tracking-widest mb-1" data-i18n="order-num">رقم الطلب</div>
+      <div class="display-en text-xl text-ink-900" id="orderNumber">NBD-2026-0000</div>
+    </div>
+    <p class="text-xs text-ink-700/50 mb-5" data-i18n="success-note">سنرسل لكِ رسالة تأكيد على رقم جوالكِ خلال دقائق.</p>
+    <button id="closeSuccess" type="button" class="btn-primary w-full justify-center" data-i18n="close">إغلاق</button>
+  </div>
+</div>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+/* ================================================================
+ *  NABDA site logic
+ *  ================================================================ */
+
+/* ---------- i18n dictionary ---------- */
+const i18n = {
+  ar: {
+    'nav-home': 'الرئيسية', 'nav-product': 'المنتج', 'nav-how': 'كيف يعمل',
+    'nav-pricing': 'الأسعار', 'nav-about': 'من نحن', 'nav-contact': 'تواصل',
+    'hero-eyebrow': 'صُنع في المملكة العربية السعودية',
+    'hero-title': 'من نبضة<br><em class="text-gold-600 font-normal italic">إلى الأبد</em>',
+    'hero-sub': 'نحوّل أول نبضة قلب لطفلك إلى قطعة ديكور تُخلّد اللحظة للأبد. إطار أنيق بشاشة صغيرة تعرض صورة أو مقطع السونار — ذكرى تبقى معلّقة على جدار بيتك.',
+    'hero-cta': 'ابدأ تصميمك', 'hero-cta2': 'كيف يعمل؟',
+    'trust-1': 'صُنع بحب في السعودية', 'trust-2': 'خامات فاخرة', 'trust-3': 'توصيل داخل المملكة',
+    'scroll': 'اسحب للأسفل',
+    'product-eyebrow': 'صمّمي قطعتك', 'product-title': 'اصنعي ذكراكِ',
+    'product-sub': 'كل تفصيلة تختارينها تروي قصة — من حجم الإطار إلى اسم صغير محفور بأناقة.',
+    'preview-label': 'معاينة حيّة',
+    'size-label': 'حجم الإطار', 'size-s': 'صغير', 'size-m': 'متوسط', 'size-l': 'كبير',
+    'display-label': 'نوع العرض', 'type-image': 'صورة', 'type-video': 'فيديو',
+    'upload-label': 'ارفعي السونار', 'upload-text': 'اضغطي لرفع صورة أو مقطع السونار',
+    'upload-hint': 'JPG · PNG · MP4 · حتى 50MB', 'uploading': 'جارٍ الرفع...',
+    'upload-done': 'تم الرفع بنجاح', 'upload-change': 'تغيير الملف',
+    'style-label': 'نمط الإطار', 'style-minimal': 'بسيط', 'style-classic': 'كلاسيكي', 'style-modern': 'عصري',
+    'engrave-label': 'نقش اختياري',
+    'total': 'الإجمالي', 'proceed': 'المتابعة للدفع',
+    'how-eyebrow': 'الرحلة', 'how-title': 'ثلاث خطوات للأبد',
+    'step1-title': 'ارفعي', 'step1-desc': 'أرسلي لنا صورة أو مقطع السونار الذي تحبينه.',
+    'step2-title': 'خصّصي', 'step2-desc': 'اختاري الحجم والإطار والنقش المناسب لذوقك.',
+    'step3-title': 'استلمي', 'step3-desc': 'يصلكِ الإطار الجاهز أمام باب منزلكِ.',
+    'price-eyebrow': 'أسعار واضحة', 'price-title': 'الأسعار',
+    'price-sub': 'جميع الأسعار شاملة التغليف الفاخر والشحن داخل المملكة.',
+    'feat-1': 'شاشة HD صغيرة', 'feat-2': 'بطارية تدوم طويلاً', 'feat-3': 'علبة هدايا فاخرة',
+    'feat-4': 'شاشة HD متوسطة', 'feat-5': 'نقش مجاني', 'feat-6': 'تغليف فاخر مع بطاقة مخصصة',
+    'feat-7': 'شاشة HD كبيرة', 'feat-8': 'نقش مزدوج', 'feat-9': 'تعليق جداري متضمن',
+    'choose': 'اختاري هذا', 'choose-pop': 'الأكثر طلباً', 'popular': 'الأكثر طلباً',
+    'check-eyebrow': 'أكملي طلبك', 'check-title': 'الدفع',
+    'field-name': 'الاسم الكامل', 'field-phone': 'رقم الجوال',
+    'field-city': 'المدينة', 'field-district': 'الحي', 'field-address': 'العنوان',
+    'city-sel': '-- اختاري --', 'city-rd': 'الرياض', 'city-jd': 'جدة', 'city-mk': 'مكة المكرمة',
+    'city-md': 'المدينة المنورة', 'city-dm': 'الدمام', 'city-kb': 'الخبر', 'city-ot': 'أخرى',
+    'field-pay': 'طريقة الدفع',
+    'summary-title': 'ملخص الطلب', 'sum-size': 'الحجم', 'sum-type': 'العرض', 'sum-style': 'الإطار',
+    'sum-eng': 'النقش', 'sum-ship': 'الشحن', 'sum-ship-free': 'مجاني',
+    'pay-now': 'تأكيد الطلب', 'secure': 'دفع آمن ومشفّر',
+    'about-eyebrow': 'قصتنا', 'about-title': 'من نحن',
+    'about-p1': 'نبضة علامة سعودية وُلدت من لحظة حقيقية — لحظة سمع فيها أبٌ نبض قلب طفله لأول مرة، وأدرك أن هذه اللحظة تستحق أن تُخلَّد.',
+    'about-p2': 'نحوّل أولى نبضات حياة أطفالكم إلى قطع فنية دائمة تزيّن جدران منازلكم وذاكرتكم.',
+    'vision': 'رؤيتنا', 'vision-text': 'تحويل اللحظات إلى ذكريات خالدة.',
+    'mission': 'مهمتنا', 'mission-text': 'صناعة ديكور شخصي ذا معنى.',
+    'contact-eyebrow': 'تواصلوا معنا', 'contact-title': 'نحن هنا',
+    'contact-sub': 'نحب أن نسمع منكم. راسلونا وسنرد خلال ٢٤ ساعة.',
+    'contact-email': 'البريد الإلكتروني', 'contact-loc': 'الموقع',
+    'contact-loc-v': 'المملكة العربية السعودية',
+    'contact-hours': 'ساعات العمل', 'contact-hours-v': 'الأحد – الخميس · ٩ص – ٦م',
+    'field-name-ph': 'اسمكِ', 'field-email-ph': 'بريدكِ الإلكتروني', 'field-msg-ph': 'رسالتكِ',
+    'send-msg': 'أرسلي الرسالة', 'sent': 'شكراً — تم استلام رسالتك بنجاح.',
+    'foot-tag': 'من أول نبضة إلى ذكرى تبقى للأبد — صُنع في المملكة العربية السعودية.',
+    'foot-nav': 'روابط', 'foot-contact': 'اتصل',
+    'rights': 'جميع الحقوق محفوظة', 'made-with': 'صُنع بحب',
+    'success-title': 'شكراً لكِ', 'success-sub': 'تم استلام طلبك بنجاح.',
+    'success-line': 'رحلة ذكراكِ بدأت الآن.',
+    'order-num': 'رقم الطلب', 'success-note': 'سنرسل لكِ رسالة تأكيد على رقم جوالكِ خلال دقائق.',
+    'close': 'إغلاق',
+  },
+  en: {
+    'nav-home': 'Home', 'nav-product': 'Product', 'nav-how': 'How It Works',
+    'nav-pricing': 'Pricing', 'nav-about': 'About', 'nav-contact': 'Contact',
+    'hero-eyebrow': 'Saudi-crafted keepsake',
+    'hero-title': 'From Heartbeat<br><em class="text-gold-600 font-normal italic">to Forever</em>',
+    'hero-sub': "We transform your baby's first heartbeat into a decor piece that preserves the moment forever — an elegant frame with a small screen displaying the ultrasound image or video, a memory that hangs on your wall.",
+    'hero-cta': 'Start Your Design', 'hero-cta2': 'How it works',
+    'trust-1': 'Made with love in Saudi Arabia', 'trust-2': 'Premium materials', 'trust-3': 'Delivered across KSA',
+    'scroll': 'Scroll',
+    'product-eyebrow': 'Design yours', 'product-title': 'Craft Your Keepsake',
+    'product-sub': 'Every detail you choose tells a story — from frame size to a small name, elegantly engraved.',
+    'preview-label': 'Live Preview',
+    'size-label': 'Frame Size', 'size-s': 'Small', 'size-m': 'Medium', 'size-l': 'Large',
+    'display-label': 'Display Type', 'type-image': 'Image', 'type-video': 'Video',
+    'upload-label': 'Upload Ultrasound', 'upload-text': 'Tap to upload your ultrasound image or video',
+    'upload-hint': 'JPG · PNG · MP4 · up to 50MB', 'uploading': 'Uploading...',
+    'upload-done': 'Uploaded successfully', 'upload-change': 'Change file',
+    'style-label': 'Frame Style', 'style-minimal': 'Minimal', 'style-classic': 'Classic', 'style-modern': 'Modern',
+    'engrave-label': 'Optional Engraving',
+    'total': 'Total', 'proceed': 'Proceed to Checkout',
+    'how-eyebrow': 'The Journey', 'how-title': 'Three Steps to Forever',
+    'step1-title': 'Upload', 'step1-desc': 'Send us the ultrasound photo or clip you cherish.',
+    'step2-title': 'Customize', 'step2-desc': 'Pick the size, frame, and engraving that fits your taste.',
+    'step3-title': 'Receive', 'step3-desc': 'Your finished frame arrives at your doorstep.',
+    'price-eyebrow': 'Simple & Transparent', 'price-title': 'Pricing',
+    'price-sub': 'All prices include premium packaging and shipping within KSA.',
+    'feat-1': 'Small HD screen', 'feat-2': 'Long-lasting battery', 'feat-3': 'Luxury gift box',
+    'feat-4': 'Medium HD screen', 'feat-5': 'Free engraving', 'feat-6': 'Premium box + custom card',
+    'feat-7': 'Large HD screen', 'feat-8': 'Dual engraving', 'feat-9': 'Wall mount included',
+    'choose': 'Choose this', 'choose-pop': 'Most Loved', 'popular': 'Most Loved',
+    'check-eyebrow': 'Complete Your Order', 'check-title': 'Checkout',
+    'field-name': 'Full Name', 'field-phone': 'Phone Number',
+    'field-city': 'City', 'field-district': 'District', 'field-address': 'Street Address',
+    'city-sel': '-- Select --', 'city-rd': 'Riyadh', 'city-jd': 'Jeddah', 'city-mk': 'Mecca',
+    'city-md': 'Medina', 'city-dm': 'Dammam', 'city-kb': 'Khobar', 'city-ot': 'Other',
+    'field-pay': 'Payment Method',
+    'summary-title': 'Order Summary', 'sum-size': 'Size', 'sum-type': 'Display', 'sum-style': 'Frame',
+    'sum-eng': 'Engraving', 'sum-ship': 'Shipping', 'sum-ship-free': 'Free',
+    'pay-now': 'Place Order', 'secure': 'Secure encrypted payment',
+    'about-eyebrow': 'Our Story', 'about-title': 'Who We Are',
+    'about-p1': "NABDA is a Saudi brand born from a real moment — the moment a father first heard his baby's heartbeat and realized this moment deserved to be preserved forever.",
+    'about-p2': "We turn your baby's first heartbeats into lasting pieces of art that grace your walls and your memory.",
+    'vision': 'Vision', 'vision-text': 'Turning moments into lasting memories.',
+    'mission': 'Mission', 'mission-text': 'Creating meaningful personalized decor.',
+    'contact-eyebrow': "Let's Talk", 'contact-title': 'Get in Touch',
+    'contact-sub': "We'd love to hear from you. Write to us and we'll reply within 24 hours.",
+    'contact-email': 'Email', 'contact-loc': 'Based in',
+    'contact-loc-v': 'Saudi Arabia',
+    'contact-hours': 'Hours', 'contact-hours-v': 'Sun – Thu · 9am – 6pm',
+    'field-name-ph': 'Your name', 'field-email-ph': 'Your email', 'field-msg-ph': 'Your message',
+    'send-msg': 'Send Message', 'sent': 'Thank you — your message has been received.',
+    'foot-tag': 'From first heartbeat to forever memories — crafted in Saudi Arabia.',
+    'foot-nav': 'Navigate', 'foot-contact': 'Contact',
+    'rights': 'All rights reserved', 'made-with': 'Made with love',
+    'success-title': 'Thank You', 'success-sub': 'Your order has been received.',
+    'success-line': 'Your keepsake journey begins now.',
+    'order-num': 'Order Number', 'success-note': "We'll send a confirmation to your phone in minutes.",
+    'close': 'Close',
+  }
+};
+
+/* ---------- Language switching ---------- */
+let currentLang = 'ar';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const dict = i18n[lang];
+  const html = document.documentElement;
+  html.lang = lang;
+  html.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+  // Text content
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (dict[key]) el.textContent = dict[key];
+  });
+  // HTML content
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.dataset.i18nHtml;
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+  // Placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.dataset.i18nPh;
+    if (dict[key]) el.placeholder = dict[key];
+  });
+
+  // Engraving placeholders
+  document.getElementById('engraveName').placeholder = lang === 'ar' ? 'اسم الطفل (اختياري)' : "Baby's name (optional)";
+  document.getElementById('engraveDate').placeholder = lang === 'ar' ? 'التاريخ (اختياري)'   : 'Date (optional)';
+
+  // Swap hero display font class
+  const heroTitle = document.getElementById('heroTitle');
+  if (heroTitle) {
+    heroTitle.classList.remove('display-ar', 'display-en');
+    heroTitle.classList.add(lang === 'ar' ? 'display-ar' : 'display-en');
+  }
+
+  // Arrow direction on CTA
+  document.querySelectorAll('.dir-arrow').forEach(a => {
+    a.style.transform = lang === 'ar' ? 'rotate(180deg)' : '';
+  });
+
+  // Toggle button labels
+  const oppositeLabel = lang === 'ar' ? 'EN' : 'AR';
+  const el1 = document.getElementById('langLabel');       if (el1) el1.textContent = oppositeLabel;
+  const el2 = document.getElementById('langLabelMobile'); if (el2) el2.textContent = oppositeLabel;
+  const el3 = document.getElementById('langFootLabel');   if (el3) el3.textContent = lang === 'ar' ? 'English' : 'العربية';
+
+  // Save preference
+  try { localStorage.setItem('nabda-lang', lang); } catch(e) {}
+
+  // Refresh dynamic summaries
+  updateSummary();
+}
+
+function toggleLang() { applyLang(currentLang === 'ar' ? 'en' : 'ar'); }
+
+document.getElementById('langToggle').addEventListener('click', toggleLang);
+document.getElementById('langToggleMobile').addEventListener('click', toggleLang);
+document.getElementById('langFoot').addEventListener('click', toggleLang);
+
+/* ---------- Mobile menu ---------- */
+const mobileMenu = document.getElementById('mobileMenu');
+document.getElementById('mobileOpen').addEventListener('click', () => mobileMenu.classList.add('open'));
+document.getElementById('mobileClose').addEventListener('click', () => mobileMenu.classList.remove('open'));
+document.querySelectorAll('.mobile-link').forEach(a =>
+  a.addEventListener('click', () => mobileMenu.classList.remove('open'))
+);
+
+/* ---------- Scroll reveal ---------- */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ---------- Product customization ---------- */
+const state = {
+  size: 'medium',
+  type: 'image',
+  style: 'classic',
+  price: 380,
+  engraveName: '',
+  engraveDate: '',
+  uploadedFile: null,
+  uploadedUrl: null,
+};
+
+const PRICES = { small: 350, medium: 380, large: 400 };
+
+function markSelected(selector, key, value) {
+  document.querySelectorAll(selector).forEach(btn => {
+    btn.classList.toggle('is-selected', btn.dataset[key] === value);
+  });
+}
+
+function updatePreviewFrame() {
+  const fp = document.getElementById('framePreview');
+  fp.classList.remove('minimal', 'classic', 'modern');
+  fp.classList.add(state.style);
+}
+
+function updateSummary() {
+  const labels = {
+    ar: { small: 'صغير', medium: 'متوسط', large: 'كبير',
+          image: 'صورة', video: 'فيديو',
+          minimal: 'بسيط', classic: 'كلاسيكي', modern: 'عصري' },
+    en: { small: 'Small', medium: 'Medium', large: 'Large',
+          image: 'Image', video: 'Video',
+          minimal: 'Minimal', classic: 'Classic', modern: 'Modern' },
+  };
+  const l = labels[currentLang];
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setText('sumSize',  l[state.size]);
+  setText('sumType',  l[state.type]);
+  setText('sumStyle', l[state.style]);
+  const eng = [state.engraveName, state.engraveDate].filter(Boolean).join(' · ');
+  setText('sumEng',   eng || '—');
+  setText('sumTotal', state.price);
+  setText('totalPrice', state.price);
+}
+
+/* Size buttons */
+document.querySelectorAll('.size-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.size = btn.dataset.size;
+    state.price = PRICES[state.size];
+    markSelected('.size-btn', 'size', state.size);
+    updateSummary();
+  });
+});
+
+/* Type buttons */
+document.querySelectorAll('.type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.type = btn.dataset.type;
+    markSelected('.type-btn', 'type', state.type);
+    updateSummary();
+  });
+});
+
+/* Style buttons */
+document.querySelectorAll('.style-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.style = btn.dataset.style;
+    markSelected('.style-btn', 'style', state.style);
+    updatePreviewFrame();
+    updateSummary();
+  });
+});
+
+/* Engraving */
+const engraveInput = document.getElementById('engraveName');
+const engraveDate  = document.getElementById('engraveDate');
+function renderEngraving() {
+  state.engraveName = engraveInput.value.trim();
+  state.engraveDate = engraveDate.value.trim();
+  const parts = [state.engraveName, state.engraveDate].filter(Boolean);
+  document.getElementById('engraving').textContent = parts.join(' · ');
+  updateSummary();
+}
+engraveInput.addEventListener('input', renderEngraving);
+engraveDate.addEventListener('input', renderEngraving);
+
+/* ---------- Upload handling ---------- */
+const MAX_MB = 50;
+const uploadZone     = document.getElementById('uploadZone');
+const fileInput      = document.getElementById('fileInput');
+const uploadIdle     = document.getElementById('uploadIdle');
+const uploadLoad     = document.getElementById('uploadLoading');
+const uploadDone     = document.getElementById('uploadDone');
+const uploadError    = document.getElementById('uploadError');
+const mediaContainer = document.getElementById('mediaContainer');
+
+function setUploadState(s) {
+  uploadIdle.classList.toggle('hidden', s !== 'idle');
+  uploadLoad.classList.toggle('hidden', s !== 'loading');
+  uploadDone.classList.toggle('hidden', s !== 'done');
+}
+function showError(msg) {
+  uploadError.textContent = msg;
+  uploadError.classList.remove('hidden');
+  setUploadState('idle');
+}
+function clearError() {
+  uploadError.classList.add('hidden');
+  uploadError.textContent = '';
+}
+
+function validateFile(file) {
+  if (!file) return { ok: false, msg: currentLang === 'ar' ? 'لم يتم اختيار ملف.' : 'No file selected.' };
+  const isImg = file.type.startsWith('image/');
+  const isVid = file.type.startsWith('video/');
+  if (!isImg && !isVid) return { ok: false, msg: currentLang === 'ar' ? 'نوع الملف غير مدعوم. استخدمي صورة أو فيديو.' : 'Unsupported file type. Use an image or video.' };
+  if (file.size > MAX_MB * 1024 * 1024) return { ok: false, msg: currentLang === 'ar' ? 'الحجم كبير جداً (الحد الأقصى ' + MAX_MB + 'MB).' : 'File too large (max ' + MAX_MB + 'MB).' };
+  return { ok: true };
+}
+
+function handleFile(file) {
+  clearError();
+  const v = validateFile(file);
+  if (!v.ok) { showError(v.msg); return; }
+
+  state.uploadedFile = file;
+  setUploadState('loading');
+
+  setTimeout(() => {
+    const url = URL.createObjectURL(file);
+    state.uploadedUrl = url;
+
+    if (file.type.startsWith('video/')) {
+      state.type = 'video';
+      markSelected('.type-btn', 'type', 'video');
+    } else {
+      state.type = 'image';
+      markSelected('.type-btn', 'type', 'image');
+    }
+    updateSummary();
+
+    mediaContainer.innerHTML = '';
+    if (file.type.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.src = url;
+      img.className = 'w-full h-full object-cover';
+      img.alt = 'Ultrasound preview';
+      mediaContainer.appendChild(img);
+    } else {
+      const vid = document.createElement('video');
+      vid.src = url;
+      vid.autoplay = true; vid.loop = true; vid.muted = true; vid.playsInline = true;
+      vid.className = 'w-full h-full object-cover';
+      mediaContainer.appendChild(vid);
+    }
+
+    setUploadState('done');
+  }, 900);
+}
+
+uploadZone.addEventListener('click', (e) => {
+  if (e.target.id === 'uploadReset') return;
+  fileInput.click();
+});
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+['dragover', 'dragenter'].forEach(ev =>
+  uploadZone.addEventListener(ev, (e) => { e.preventDefault(); uploadZone.classList.add('drag'); })
+);
+['dragleave', 'drop'].forEach(ev =>
+  uploadZone.addEventListener(ev, (e) => { e.preventDefault(); uploadZone.classList.remove('drag'); })
+);
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+
+document.getElementById('uploadReset').addEventListener('click', (e) => {
+  e.stopPropagation();
+  fileInput.value = '';
+  state.uploadedFile = null;
+  state.uploadedUrl = null;
+  setUploadState('idle');
+  mediaContainer.innerHTML =
+    '<svg viewBox="0 0 300 400" class="w-full h-full">' +
+    '<defs><radialGradient id="p3" cx="50%" cy="50%" r="60%">' +
+    '<stop offset="0%" stop-color="#3E3221" stop-opacity="0.9"/>' +
+    '<stop offset="100%" stop-color="#3E3221" stop-opacity="0"/>' +
+    '</radialGradient></defs>' +
+    '<rect width="300" height="400" fill="#2A2116"/>' +
+    '<ellipse cx="150" cy="200" rx="140" ry="180" fill="url(#p3)"/>' +
+    '<path d="M130 150 C 100 150, 85 180, 95 210 C 100 230, 115 240, 130 240 C 115 250, 110 275, 125 290 C 140 305, 170 300, 180 280 C 200 285, 220 270, 220 245 C 220 225, 205 215, 190 215 C 200 200, 200 180, 190 165 C 175 145, 150 142, 130 150 Z" fill="#D4BC8A" opacity="0.7"/>' +
+    '</svg>';
+});
+
+/* ---------- Payment highlight ---------- */
+function refreshPayHighlight() {
+  document.querySelectorAll('.pay-option').forEach(opt => {
+    const radio = opt.querySelector('input[type="radio"]');
+    opt.classList.toggle('is-selected', radio && radio.checked);
+  });
+}
+document.querySelectorAll('.pay-option input[type="radio"]').forEach(r => {
+  r.addEventListener('change', refreshPayHighlight);
+});
+
+/* ---------- Checkout submit ---------- */
+const checkoutForm = document.getElementById('checkoutForm');
+const successModal = document.getElementById('successModal');
+
+checkoutForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const num = 'NBD-2026-' + String(Math.floor(1000 + Math.random() * 9000));
+  document.getElementById('orderNumber').textContent = num;
+  successModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+
+document.getElementById('closeSuccess').addEventListener('click', () => {
+  successModal.classList.remove('open');
+  document.body.style.overflow = '';
+  checkoutForm.reset();
+  refreshPayHighlight();
+});
+successModal.addEventListener('click', (e) => {
+  if (e.target === successModal) {
+    successModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+/* ---------- Contact form ---------- */
+document.getElementById('contactForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const ok = document.getElementById('contactOk');
+  ok.classList.remove('hidden');
+  e.target.reset();
+  setTimeout(() => ok.classList.add('hidden'), 5000);
+});
+
+/* ---------- Init defaults ---------- */
+(function init() {
+  markSelected('.size-btn', 'size', state.size);
+  markSelected('.type-btn', 'type', state.type);
+  markSelected('.style-btn', 'style', state.style);
+  updatePreviewFrame();
+  updateSummary();
+  refreshPayHighlight();
+
+  // Init language from saved preference
+  try {
+    const saved = localStorage.getItem('nabda-lang');
+    applyLang(saved === 'en' ? 'en' : 'ar');
+  } catch (e) {
+    applyLang('ar');
+  }
+})();
+</script>
+
+</body>
+</html>
